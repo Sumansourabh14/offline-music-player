@@ -1,0 +1,28 @@
+{
+    "assets": [
+        {
+            "albumId": "1642794701", 
+            "creationTime": 1630029343000, 
+            "duration": 2.867, 
+            "filename": "Calm.ogg", 
+            "height": 0, 
+            "id": "108976", 
+            "mediaType": "audio", 
+            "modificationTime": 1630029343000, 
+            "uri": "file:///storage/emulated/0/Android/media/com.google.android.gm/Notifications/Calm/Calm.ogg", 
+            "width": 0
+        },
+        {
+            "albumId": "540528482", 
+            "creationTime": 1576762620000, 
+            "duration": 196.496, 
+            "filename": "muzmo_ru_Kehlani_-_Let_Me_Live_65715749.mp3", 
+            "height": 0, 
+            "id": "815", 
+            "mediaType": "audio", 
+            "modificationTime": 1576762620000, 
+            "uri": "file:///storage/emulated/0/Download/muzmo_ru_Kehlani_-_Let_Me_Live_65715749.mp3", 
+            "width": 0
+        }
+    ]
+}

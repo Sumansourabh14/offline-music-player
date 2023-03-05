@@ -1,12 +1,15 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
+import AudioProviderContext from "./src/context/AudioProviderContext";
 import AppNavigator from "./src/navigation/AppNavigator";
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
+    <AudioProviderContext>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </AudioProviderContext>
   );
 }
 

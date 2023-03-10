@@ -1,47 +1,78 @@
 import React, { useContext } from "react";
-import { FlatList } from "react-native";
-import { ScrollView } from "react-native";
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { AudioContext } from "../context/AudioProviderContext";
-
-// const Audio = ({ title }) => {
-//   <View style={styles.audio}>
-//     <Text>{title}</Text>
-//   </View>;
-// };
 
 const AudioList = () => {
   const { audioFiles } = useContext(AudioContext);
 
-  console.log(typeof audioFiles);
-  console.log(audioFiles);
+  const dimensions = Dimensions.get("window");
+  console.log(dimensions.width);
+
+  const styles = StyleSheet.create({
+    container: {
+      justifyContent: "center",
+      alignItems: "center",
+      paddingHorizontal: 8,
+    },
+    audio: {
+      backgroundColor: "white",
+      flexDirection: "row",
+      alignItems: "center",
+      width: dimensions.width - 10,
+      marginVertical: 8,
+      borderRadius: 8,
+      height: 60,
+    },
+    screenTitle: {
+      fontSize: 20,
+    },
+    leftContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+    },
+    audioTitle: {
+      paddingLeft: 6,
+      width: dimensions.width - 110,
+    },
+    rightContainer: {
+      flexBasis: 40,
+    },
+    trackCover: {
+      backgroundColor: "yellow",
+      justifyContent: "center",
+      alignItems: "center",
+      flexBasis: 60,
+      height: 60,
+      borderRadius: 8,
+    },
+  });
+
+  // console.log(typeof audioFiles);
+  // console.log(audioFiles);
+
   return (
     <View style={styles.container}>
-      {/* <View style={{ paddingVertical: 5 }}></View> */}
-      {/* <Text style={styles.screenTitle}>{audioFiles?.length} Songs</Text> */}
-      {/* <View>
-          {audioFiles.map((audio) => (
-            <View key={audio?.id} style={styles.audio}>
-              <Text>{audio?.filename}</Text>
-            </View>
-          ))}
-        </View> */}
-      {/* <View> */}
       <FlatList
         data={audioFiles}
         renderItem={({ item }) => (
           <View style={styles.audio}>
             <View style={styles.leftContainer}>
               <View style={styles.trackCover}>
-                <Text>A</Text>
+                <Ionicons name="musical-notes-outline" size={20} />
               </View>
-              <View>
-                <Text>{item?.filename}</Text>
-                <Text>{Math.floor(item?.duration)}</Text>
+              <View style={styles.audioTitle}>
+                <Text numberOfLines={1} style={{ marginBottom: 4 }}>
+                  {item?.filename}
+                </Text>
+                <Text style={{ color: "#c0c0c0" }}>
+                  {Math.floor(item?.duration)}
+                </Text>
               </View>
             </View>
             <View style={styles.rightContainer}>
-              <Text>...</Text>
+              <Ionicons name="ellipsis-vertical-outline" size={30} />
             </View>
           </View>
         )}
@@ -53,30 +84,3 @@ const AudioList = () => {
 };
 
 export default AudioList;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  audio: {
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  screenTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  leftContainer: {
-    backgroundColor: "white",
-    flexDirection: "row",
-  },
-  trackCover: {
-    backgroundColor: "blue",
-    width: 30,
-    height: 30,
-  },
-});

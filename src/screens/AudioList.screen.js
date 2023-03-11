@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import { Audio } from "expo-av";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -38,11 +39,13 @@ const OptionsModal = ({ visible, onclose, onPlayPress, onPlaylistPress }) => {
 
 const AudioList = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [playbackObj, setPlaybackObj] = useState(null);
+  const [soundObj, setSoundObj] = useState(null);
+  const [currentAudio, setCurrentAudio] = useState({});
 
   const { audioFiles } = useContext(AudioContext);
 
   const dimensions = Dimensions.get("window");
-  console.log(dimensions.width);
 
   const styles = StyleSheet.create({
     container: {
@@ -107,6 +110,56 @@ const AudioList = () => {
 
   // console.log(convertDuration());
 
+  const onAudioPress = async (audio) => {
+    console.log(audio);
+
+    // Playing audio for the first time
+    // If soundObj is null, means no audio is playing currently
+    if (soundObj === null) {
+      const playbackObject = new Audio.Sound();
+      const status = await playbackObject.loadAsync(
+        {
+          uri: audio.uri,
+        },
+        {
+          shouldPlay: true,
+        }
+      );
+
+      console.log("playing");
+
+      return (
+        setPlaybackObj(playbackObject),
+        setSoundObj(status),
+        setCurrentAudio(audio)
+      );
+    }
+
+    // Pause the audio if it is playing
+    if (soundObj.isLoaded && soundObj.isPlaying) {
+      const status = setPlaybackObj(
+        playbackObj.setStatusAsync({
+          shouldPlay: false,
+        })
+      );
+
+      console.log("paused");
+
+      return setSoundObj(status);
+    }
+
+    // Resume audio
+    if (
+      soundObj.isLoaded &&
+      !soundObj.isPlaying &&
+      currentAudio.id === audio.id
+    ) {
+      const status = setPlaybackObj(playbackObj.playAsync());
+
+      return setSoundObj(status);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <OptionsModal
@@ -119,19 +172,21 @@ const AudioList = () => {
         data={audioFiles}
         renderItem={({ item }) => (
           <View style={styles.audio}>
-            <View style={styles.leftContainer}>
-              <View style={styles.trackCover}>
-                <Ionicons name="musical-notes-outline" size={20} />
+            <TouchableWithoutFeedback onPress={() => onAudioPress(item)}>
+              <View style={styles.leftContainer}>
+                <View style={styles.trackCover}>
+                  <Ionicons name="musical-notes-outline" size={20} />
+                </View>
+                <View style={styles.audioTitle}>
+                  <Text numberOfLines={1} style={{ marginBottom: 4 }}>
+                    {item?.filename}
+                  </Text>
+                  <Text style={{ color: "#c0c0c0" }}>
+                    {convertDuration(Math.floor(item?.duration))}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.audioTitle}>
-                <Text numberOfLines={1} style={{ marginBottom: 4 }}>
-                  {item?.filename}
-                </Text>
-                <Text style={{ color: "#c0c0c0" }}>
-                  {convertDuration(Math.floor(item?.duration))}
-                </Text>
-              </View>
-            </View>
+            </TouchableWithoutFeedback>
             <View style={styles.rightContainer}>
               <TouchableOpacity onPress={() => setOpenModal(true)}>
                 <Ionicons

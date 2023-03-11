@@ -12,14 +12,18 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { AudioContext } from "../context/AudioProviderContext";
 
-const OptionsModal = ({ visible, onclose }) => {
+const OptionsModal = ({ visible, onclose, onPlayPress, onPlaylistPress }) => {
   return (
     <>
       <Modal transparent animationType="slide" visible={visible}>
         <View style={modalStyles.modal}>
           <View>
-            <Text style={modalStyles.text}>Play</Text>
-            <Text style={modalStyles.text}>Add to playlist</Text>
+            <TouchableWithoutFeedback onPress={onPlayPress}>
+              <Text style={modalStyles.text}>Play</Text>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={onPlaylistPress}>
+              <Text style={modalStyles.text}>Add to playlist</Text>
+            </TouchableWithoutFeedback>
           </View>
         </View>
 
@@ -65,10 +69,10 @@ const AudioList = () => {
     },
     audioTitle: {
       paddingLeft: 6,
-      width: dimensions.width - 110,
+      width: dimensions.width - 130,
     },
     rightContainer: {
-      flexBasis: 40,
+      flexBasis: 50,
     },
     trackCover: {
       backgroundColor: "yellow",
@@ -105,7 +109,12 @@ const AudioList = () => {
 
   return (
     <View style={styles.container}>
-      <OptionsModal visible={openModal} onclose={() => setOpenModal(false)} />
+      <OptionsModal
+        visible={openModal}
+        onclose={() => setOpenModal(false)}
+        onPlayPress={() => console.log("Playing audio")}
+        onPlaylistPress={() => console.log("adding in playlist")}
+      />
       <FlatList
         data={audioFiles}
         renderItem={({ item }) => (
@@ -125,7 +134,13 @@ const AudioList = () => {
             </View>
             <View style={styles.rightContainer}>
               <TouchableOpacity onPress={() => setOpenModal(true)}>
-                <Ionicons name="ellipsis-vertical-outline" size={30} />
+                <Ionicons
+                  name="ellipsis-vertical-outline"
+                  size={30}
+                  style={{
+                    padding: 10,
+                  }}
+                />
               </TouchableOpacity>
             </View>
           </View>

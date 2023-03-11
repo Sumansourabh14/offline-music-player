@@ -1,5 +1,12 @@
 import React, { useContext } from "react";
-import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { AudioContext } from "../context/AudioProviderContext";
 
@@ -52,6 +59,31 @@ const AudioList = () => {
   // console.log(typeof audioFiles);
   // console.log(audioFiles);
 
+  const convertDuration = (duration) => {
+    const minutes = Math.floor(duration / 60);
+    const seconds = duration % 60;
+
+    if (minutes < 10) {
+      if (seconds < 10) {
+        return `0${minutes}:0${seconds}`;
+      } else {
+        return `0${minutes}:${seconds}`;
+      }
+    }
+
+    if (seconds >= 10) {
+      return `${minutes}:${seconds}`;
+    }
+
+    return `${minutes}:0${seconds}`;
+  };
+
+  const onOptionsPress = () => {
+    console.log("Options menu pressed.");
+  };
+
+  // console.log(convertDuration());
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -67,18 +99,19 @@ const AudioList = () => {
                   {item?.filename}
                 </Text>
                 <Text style={{ color: "#c0c0c0" }}>
-                  {Math.floor(item?.duration)}
+                  {convertDuration(Math.floor(item?.duration))}
                 </Text>
               </View>
             </View>
             <View style={styles.rightContainer}>
-              <Ionicons name="ellipsis-vertical-outline" size={30} />
+              <TouchableOpacity onPress={onOptionsPress}>
+                <Ionicons name="ellipsis-vertical-outline" size={30} />
+              </TouchableOpacity>
             </View>
           </View>
         )}
         keyExtractor={(item) => item?.id}
       />
-      {/* </View> */}
     </View>
   );
 };

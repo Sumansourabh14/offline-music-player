@@ -1,16 +1,40 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   Dimensions,
   FlatList,
+  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { AudioContext } from "../context/AudioProviderContext";
 
+const OptionsModal = ({ visible, onclose }) => {
+  return (
+    <>
+      <Modal transparent animationType="slide" visible={visible}>
+        <View style={modalStyles.modal}>
+          <View>
+            <Text style={modalStyles.text}>Play</Text>
+            <Text style={modalStyles.text}>Add to playlist</Text>
+          </View>
+        </View>
+
+        {/* Hide modal when tapped anywhere (outside the modal) */}
+        <TouchableWithoutFeedback onPress={onclose}>
+          <View style={modalStyles.modalBg} />
+        </TouchableWithoutFeedback>
+      </Modal>
+    </>
+  );
+};
+
 const AudioList = () => {
+  const [openModal, setOpenModal] = useState(false);
+
   const { audioFiles } = useContext(AudioContext);
 
   const dimensions = Dimensions.get("window");
@@ -56,7 +80,6 @@ const AudioList = () => {
     },
   });
 
-  // console.log(typeof audioFiles);
   // console.log(audioFiles);
 
   const convertDuration = (duration) => {
@@ -78,14 +101,11 @@ const AudioList = () => {
     return `${minutes}:0${seconds}`;
   };
 
-  const onOptionsPress = () => {
-    console.log("Options menu pressed.");
-  };
-
   // console.log(convertDuration());
 
   return (
     <View style={styles.container}>
+      <OptionsModal visible={openModal} onclose={() => setOpenModal(false)} />
       <FlatList
         data={audioFiles}
         renderItem={({ item }) => (
@@ -104,7 +124,7 @@ const AudioList = () => {
               </View>
             </View>
             <View style={styles.rightContainer}>
-              <TouchableOpacity onPress={onOptionsPress}>
+              <TouchableOpacity onPress={() => setOpenModal(true)}>
                 <Ionicons name="ellipsis-vertical-outline" size={30} />
               </TouchableOpacity>
             </View>
@@ -117,3 +137,31 @@ const AudioList = () => {
 };
 
 export default AudioList;
+
+const modalStyles = StyleSheet.create({
+  modal: {
+    backgroundColor: "#FFF",
+    position: "absolute",
+    right: 0,
+    left: 0,
+    bottom: 0,
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    zIndex: 10,
+  },
+  text: {
+    fontSize: 16,
+    marginBottom: 14,
+    fontWeight: "bold",
+  },
+  modalBg: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+  },
+});

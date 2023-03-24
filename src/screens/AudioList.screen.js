@@ -111,7 +111,7 @@ const AudioList = () => {
   // console.log(convertDuration());
 
   const onAudioPress = async (audio) => {
-    console.log(audio);
+    // console.log("Audio:", audio);
 
     // Playing audio for the first time
     // If soundObj is null, means no audio is playing currently
@@ -126,7 +126,10 @@ const AudioList = () => {
         }
       );
 
-      console.log("playing");
+      // console.log("playing");
+      // console.log("soundObj line 130", soundObj);
+
+      console.log(status);
 
       return (
         setPlaybackObj(playbackObject),
@@ -137,13 +140,10 @@ const AudioList = () => {
 
     // Pause the audio if it is playing
     if (soundObj.isLoaded && soundObj.isPlaying) {
-      const status = setPlaybackObj(
-        playbackObj.setStatusAsync({
-          shouldPlay: false,
-        })
-      );
+      const status = await playbackObj.pauseAsync();
 
       console.log("paused");
+      console.log("soundObj line 148", soundObj.isPlaying);
 
       return setSoundObj(status);
     }
@@ -154,8 +154,9 @@ const AudioList = () => {
       !soundObj.isPlaying &&
       currentAudio.id === audio.id
     ) {
-      const status = setPlaybackObj(playbackObj.playAsync());
+      const status = await playbackObj.playAsync();
 
+      console.log("soundObj line 161", soundObj.isPlaying);
       return setSoundObj(status);
     }
   };

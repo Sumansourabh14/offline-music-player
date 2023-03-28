@@ -1,5 +1,5 @@
 import { Audio } from "expo-av";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { AudioContext } from "../context/AudioProviderContext";
+import { pause, play, resume } from "../utils/audioController";
 
 const OptionsModal = ({ visible, onclose, onPlayPress, onPlaylistPress }) => {
   return (
@@ -87,8 +88,6 @@ const AudioList = () => {
     },
   });
 
-  // console.log(audioFiles);
-
   const convertDuration = (duration) => {
     const minutes = Math.floor(duration / 60);
     const seconds = duration % 60;
@@ -108,8 +107,6 @@ const AudioList = () => {
     return `${minutes}:0${seconds}`;
   };
 
-  // console.log(convertDuration());
-
   const onAudioPress = async (audio) => {
     // console.log("Audio:", audio);
 
@@ -117,17 +114,7 @@ const AudioList = () => {
     // If soundObj is null, means no audio is playing currently
     if (soundObj === null) {
       const playbackObject = new Audio.Sound();
-      const status = await playbackObject.loadAsync(
-        {
-          uri: audio.uri,
-        },
-        {
-          shouldPlay: true,
-        }
-      );
-
-      // console.log("playing");
-      // console.log("soundObj line 130", soundObj);
+      const status = await play(playbackObject, audio.uri);
 
       console.log(status);
 
@@ -140,10 +127,7 @@ const AudioList = () => {
 
     // Pause the audio if it is playing
     if (soundObj.isLoaded && soundObj.isPlaying) {
-      const status = await playbackObj.pauseAsync();
-
-      console.log("paused");
-      console.log("soundObj line 148", soundObj.isPlaying);
+      const status = await pause(playbackObj);
 
       return setSoundObj(status);
     }
@@ -154,9 +138,8 @@ const AudioList = () => {
       !soundObj.isPlaying &&
       currentAudio.id === audio.id
     ) {
-      const status = await playbackObj.playAsync();
+      const status = await resume(playbackObj);
 
-      console.log("soundObj line 161", soundObj.isPlaying);
       return setSoundObj(status);
     }
   };

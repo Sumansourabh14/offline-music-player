@@ -8,6 +8,10 @@ export const AudioContext = createContext();
 const AudioProviderContext = ({ children }) => {
   const [audioFiles, setAudioFiles] = useState([]);
   const [permissionError, setPermissionError] = useState(false);
+  // const [state, setState] = useState({});
+  // const [playbackObj, setPlaybackObj] = useState(null);
+  // const [soundObj, setSoundObj] = useState(null);
+  // const [currentAudio, setCurrentAudio] = useState({});
 
   const permissionAlert = () => {
     Alert.alert("Permission required!", "This app needs to read audio files", [
@@ -76,6 +80,10 @@ const AudioProviderContext = ({ children }) => {
   useEffect(() => {
     getPermission();
   }, []);
+
+  // const updateState = (newState = {}) => {
+  //   setState((prevState) => ({ ...prevState, ...newState }));
+  // };
 
   if (permissionError) {
     return (

@@ -38,3 +38,21 @@ export const resume = async (playbackObject) => {
 };
 
 // Select another audio
+export const playAnotherAudio = async (playbackObject, uri) => {
+  console.log("playbackObject:", playbackObject);
+  console.log("uri:", uri);
+
+  try {
+    // const currentPosition = await playbackObject.getPositionAsync(); // store current playback position
+
+    await playbackObject.stopAsync();
+    await playbackObject.unloadAsync();
+
+    const status = await play(playbackObject, uri);
+    // await playbackObject.setPositionAsync(currentPosition); // set new audio playback position to the stored position
+
+    return status;
+  } catch (error) {
+    console.log("Error playing another audio:", error);
+  }
+};

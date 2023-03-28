@@ -12,7 +12,12 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { AudioContext } from "../context/AudioProviderContext";
-import { pause, play, resume } from "../utils/audioController";
+import {
+  pause,
+  play,
+  playAnotherAudio,
+  resume,
+} from "../utils/audioController";
 
 const OptionsModal = ({ visible, onclose, onPlayPress, onPlaylistPress }) => {
   return (
@@ -125,8 +130,15 @@ const AudioList = () => {
       );
     }
 
+    console.log("audio:", audio.filename);
+    console.log("currentAudio:", currentAudio.filename);
+
     // Pause the audio if it is playing
-    if (soundObj.isLoaded && soundObj.isPlaying) {
+    if (
+      soundObj.isLoaded &&
+      soundObj.isPlaying &&
+      currentAudio.id === audio.id
+    ) {
       const status = await pause(playbackObj);
 
       return setSoundObj(status);
@@ -141,6 +153,12 @@ const AudioList = () => {
       const status = await resume(playbackObj);
 
       return setSoundObj(status);
+    }
+
+    // Select another audio
+    if (soundObj.isLoaded && currentAudio.id !== audio.id) {
+      const status = await playAnotherAudio(playbackObj, audio.uri);
+      return setSoundObj(status), setCurrentAudio(audio);
     }
   };
 
